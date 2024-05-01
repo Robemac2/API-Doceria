@@ -20,7 +20,7 @@ namespace API_Doceria.Controllers
         {
             if (ingrediente == null)
             {
-                return BadRequest(new { Erro = "O ingrediente não pode ser nulo" });
+                return NotFound();
             }
 
             _doceriaContext.Add(ingrediente);
@@ -60,7 +60,7 @@ namespace API_Doceria.Controllers
             _doceriaContext.Update(ingredienteBanco);
             _doceriaContext.SaveChanges();
 
-            return Ok(ingredienteBanco);
+            return Ok();
         }
 
         [HttpDelete("Deletar/{id}")]
@@ -76,7 +76,7 @@ namespace API_Doceria.Controllers
             _doceriaContext.Ingredientes.Remove(ingredienteBanco);
             _doceriaContext.SaveChanges();
 
-            return NoContent();
+            return Ok();
         }
     }
 }

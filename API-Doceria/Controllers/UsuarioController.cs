@@ -20,7 +20,7 @@ namespace API_Doceria.Controllers
         {
             if (usuario == null)
             {
-                return BadRequest(new { Erro = "O usuário não pode ser nulo" });
+                return NotFound();
             }
 
             _doceriaContext.Add(usuario);
@@ -47,14 +47,14 @@ namespace API_Doceria.Controllers
         {
             if (nome == null || senha == null)
             {
-                return BadRequest(new { Erro = "O usuário e senha não podem ser nulos" });
+                return NotFound();
             }
 
             var usuarioBanco = _doceriaContext.Usuarios.Where(x => x.Nome == nome && x.Senha == senha);
 
             if (usuarioBanco == null)
             {
-                return BadRequest(new { Erro = "Usuário ou senha incorretos" });
+                return NotFound();
             }
 
             return Ok(usuarioBanco);
@@ -76,7 +76,7 @@ namespace API_Doceria.Controllers
             _doceriaContext.Update(usuarioBanco);
             _doceriaContext.SaveChanges();
 
-            return Ok(usuarioBanco);
+            return Ok();
         }
 
         [HttpDelete("Deletar/{id}")]
@@ -92,7 +92,7 @@ namespace API_Doceria.Controllers
             _doceriaContext.Usuarios.Remove(usuarioBanco);
             _doceriaContext.SaveChanges();
 
-            return NoContent();
+            return Ok();
         }
     }
 }

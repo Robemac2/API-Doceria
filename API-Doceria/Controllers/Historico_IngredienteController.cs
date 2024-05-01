@@ -20,7 +20,7 @@ namespace API_Doceria.Controllers
         {
             if (_doceriaContext.Ingredientes.Find(id) == null)
             {
-                return BadRequest(new { Erro = "O ingrediente não pode ser nulo" });
+                return NotFound();
             }
 
             var ingrediente = _doceriaContext.Ingredientes.Find(id);

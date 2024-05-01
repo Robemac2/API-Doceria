@@ -24,7 +24,7 @@ namespace API_Doceria.Controllers
 
             if (pedido == null || receita == null)
             {
-                return BadRequest(new { Erro = "A receita e o pedido não podem ser nulos" });
+                return NotFound();
             }
 
             var pedidoReceita = new Pedido_Receita();
@@ -37,7 +37,7 @@ namespace API_Doceria.Controllers
             _doceriaContext.Add(pedidoReceita);
             _doceriaContext.SaveChanges();
 
-            return Ok(pedidoReceita);
+            return Ok();
         }
 
         [HttpGet("ListarPedidoReceita/{idPedido}")]
@@ -47,20 +47,20 @@ namespace API_Doceria.Controllers
 
             if (pedidoReceitas == null)
             {
-                return BadRequest(new { Erro = "O pedido não pode ser nulo" });
+                return NotFound();
             }
 
             return Ok(pedidoReceitas);
         }
 
         [HttpGet("ListarPedidos/{status}")]
-        public  IActionResult ListarPedidoPorStatus(StatusPedido status)
+        public IActionResult ListarPedidoPorStatus(StatusPedido status)
         {
             var pedidos = _doceriaContext.Pedido_Receitas.Where(x => x.Pedido.Status == status);
 
             if (pedidos == null)
             {
-                return BadRequest(new { Erro = "O pedido não pode ser nulo" });
+                return NotFound();
             }
 
             return Ok(pedidos);
@@ -73,13 +73,13 @@ namespace API_Doceria.Controllers
 
             if (pedidos == null)
             {
-                return BadRequest(new { Erro = "O pedido não pode ser nulo" });
+                return NotFound();
             }
 
             _doceriaContext.Remove(pedidos);
             _doceriaContext.SaveChanges();
 
-            return NotFound();
+            return Ok();
         }
     }
 }

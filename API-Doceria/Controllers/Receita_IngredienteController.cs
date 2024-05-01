@@ -23,7 +23,7 @@ namespace API_Doceria.Controllers
 
             if (receita == null || ingrediente == null)
             {
-                return BadRequest(new { Erro = "A receita e o ingrediente não podem ser nulos" });
+                return NotFound();
             }
 
             var receitaIngrediente = new Receita_Ingrediente();
@@ -44,7 +44,7 @@ namespace API_Doceria.Controllers
 
             if (receitaIngredientes == null)
             {
-                return BadRequest(new { Erro = "A receita não pode ser nula" });
+                return NotFound();
             }
 
             return Ok(receitaIngredientes);
@@ -57,7 +57,7 @@ namespace API_Doceria.Controllers
 
             _doceriaContext.Receita_Ingrediente.RemoveRange(deletar);
 
-            return NotFound();
+            return Ok();
         }
     }
 }

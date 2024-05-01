@@ -20,7 +20,7 @@ namespace API_Doceria.Controllers
         {
             if (receita == null)
             {
-                return BadRequest(new { Erro = "A receita não pode ser nula" });
+                return NotFound();
             }
 
             _doceriaContext.Add(receita);
@@ -60,7 +60,7 @@ namespace API_Doceria.Controllers
             _doceriaContext.Update(receitaBanco);
             _doceriaContext.SaveChanges();
 
-            return Ok(receitaBanco);
+            return Ok();
         }
 
         [HttpDelete("Deletar/{id}")]
@@ -76,7 +76,7 @@ namespace API_Doceria.Controllers
             _doceriaContext.Receitas.Remove(receitaBanco);
             _doceriaContext.SaveChanges();
 
-            return NoContent();
+            return Ok();
         }
     }
 }

@@ -20,7 +20,7 @@ namespace API_Doceria.Controllers
         {
             if (pedido == null)
             {
-                return BadRequest(new { Erro = "O pedido não pode ser nulo" });
+                return NotFound();
             }
 
             _doceriaContext.Add(pedido);
@@ -71,7 +71,7 @@ namespace API_Doceria.Controllers
             _doceriaContext.Update(pedido);
             _doceriaContext.SaveChanges();
 
-            return Ok(pedido);
+            return Ok();
         }
 
         [HttpDelete("Deletar/{id}")]
@@ -87,7 +87,7 @@ namespace API_Doceria.Controllers
             _doceriaContext.Pedidos.Remove(pedidoBanco);
             _doceriaContext.SaveChanges();
 
-            return NoContent();
+            return Ok();
         }
     }
 }
