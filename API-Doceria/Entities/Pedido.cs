@@ -10,8 +10,6 @@ namespace API_Doceria.Entities
         [Key]
         [Column("id")]
         public int Id { get; set; }
-        [ForeignKey("receitaId")]
-        public virtual Receita Receita { get; set; }
         [Column("totalPedido", TypeName = "money")]
         public decimal TotalPedido { get; set; }
         [Column("cliente")]
