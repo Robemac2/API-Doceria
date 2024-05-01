@@ -1,6 +1,5 @@
 ﻿using API_Doceria.Context;
 using API_Doceria.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API_Doceria.Controllers
