@@ -1,6 +1,7 @@
 ﻿using API_Doceria.Context;
 using API_Doceria.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API_Doceria.Controllers
 {
@@ -16,23 +17,23 @@ namespace API_Doceria.Controllers
         }
 
         [HttpPost("CadastrarReceita")]
-        public IActionResult CadastrarReceita(Receita receita)
+        public async Task<IActionResult> CadastrarReceita(Receita receita)
         {
             if (receita == null)
             {
                 return NotFound();
             }
 
-            _doceriaContext.Add(receita);
-            _doceriaContext.SaveChanges();
+            await _doceriaContext.AddAsync(receita);
+            await _doceriaContext.SaveChangesAsync();
 
             return Ok();
         }
 
         [HttpGet("ListarReceitas")]
-        public IActionResult ListarReceitas()
+        public async Task<IActionResult> ListarReceitas()
         {
-            var receitas = _doceriaContext.Receitas;
+            var receitas = await _doceriaContext.Receitas.ToListAsync();
 
             if (receitas == null)
             {
@@ -43,9 +44,9 @@ namespace API_Doceria.Controllers
         }
 
         [HttpPut("AtualizarReceita/{id}")]
-        public IActionResult AtualizarReceita(int id, Receita receita)
+        public async Task<IActionResult> AtualizarReceita(int id, Receita receita)
         {
-            var receitaBanco = _doceriaContext.Receitas.Find(id);
+            var receitaBanco = await _doceriaContext.Receitas.FindAsync(id);
 
             if (receitaBanco == null)
             {
@@ -58,15 +59,15 @@ namespace API_Doceria.Controllers
             receitaBanco.TempoDePreparo = receita.TempoDePreparo;
 
             _doceriaContext.Update(receitaBanco);
-            _doceriaContext.SaveChanges();
+            await _doceriaContext.SaveChangesAsync();
 
             return Ok();
         }
 
         [HttpDelete("Deletar/{id}")]
-        public IActionResult ExcluirReceita(int id)
+        public async Task<IActionResult> ExcluirReceita(int id)
         {
-            var receitaBanco = _doceriaContext.Receitas.Find(id);
+            var receitaBanco = await _doceriaContext.Receitas.FindAsync(id);
 
             if (receitaBanco == null)
             {
@@ -74,7 +75,7 @@ namespace API_Doceria.Controllers
             }
 
             _doceriaContext.Receitas.Remove(receitaBanco);
-            _doceriaContext.SaveChanges();
+            await _doceriaContext.SaveChangesAsync();
 
             return Ok();
         }
