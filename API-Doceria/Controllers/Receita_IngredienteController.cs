@@ -16,10 +16,10 @@ namespace API_Doceria.Controllers
         }
 
         [HttpPost("CadastrarReceitaIngrediente/{idReceita}/{idIngrediente}")]
-        public IActionResult CadastrarReceitaIngrediente(int idReceita, int idIngrediente)
+        public async Task<IActionResult> CadastrarReceitaIngrediente(int idReceita, int idIngrediente)
         {
-            var ingrediente = _doceriaContext.Ingredientes.Find(idIngrediente);
-            var receita = _doceriaContext.Receitas.Find(idReceita);
+            var ingrediente = await _doceriaContext.Ingredientes.FindAsync(idIngrediente);
+            var receita = await _doceriaContext.Receitas.FindAsync(idReceita);
 
             if (receita == null || ingrediente == null)
             {
@@ -31,8 +31,8 @@ namespace API_Doceria.Controllers
             receitaIngrediente.Receita = receita;
             receitaIngrediente.Ingrediente = ingrediente;
 
-            _doceriaContext.Add(receitaIngrediente);
-            _doceriaContext.SaveChanges();
+            await _doceriaContext.AddAsync(receitaIngrediente);
+            await _doceriaContext.SaveChangesAsync();
 
             return Ok();
         }
