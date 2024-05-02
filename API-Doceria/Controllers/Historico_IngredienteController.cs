@@ -16,16 +16,16 @@ namespace API_Doceria.Controllers
         }
 
         [HttpPost("CadastrarHistorico/{id}")]
-        public IActionResult CadastrarHistoricoIngrediente(int id)
+        public async Task<IActionResult> CadastrarHistoricoIngrediente(int id)
         {
-            if (_doceriaContext.Ingredientes.Find(id) == null)
+            var ingrediente = await _doceriaContext.Ingredientes.FindAsync(id);
+
+            var historico = new Historico_Ingrediente();
+
+            if (ingrediente == null)
             {
                 return NotFound();
             }
-
-            var ingrediente = _doceriaContext.Ingredientes.Find(id);
-
-            var historico = new Historico_Ingrediente();
 
             historico.Ingrediente = ingrediente;
             historico.Preco = ingrediente.Preco;
@@ -33,8 +33,8 @@ namespace API_Doceria.Controllers
             historico.Unidade = ingrediente.Unidade;
             historico.Data = ingrediente.Data;
 
-            _doceriaContext.Add(historico);
-            _doceriaContext.SaveChanges();
+            await _doceriaContext.AddAsync(historico);
+            await _doceriaContext.SaveChangesAsync();
 
             return Ok();
         }
@@ -42,7 +42,12 @@ namespace API_Doceria.Controllers
         [HttpGet("ListarHistorico/{id}")]
         public IActionResult ListarHistoricoIngrediente(int id)
         {
-            var historico = _doceriaContext.Historico_Ingredientes.All(x => x.Ingrediente.Id == id);
+            var historico = _doceriaContext.Historico_Ingredientes.Where(x => x.Ingrediente.Id == id);
+
+            if (historico == null)
+            {
+                return NotFound();
+            }
 
             return Ok(historico);
         }
