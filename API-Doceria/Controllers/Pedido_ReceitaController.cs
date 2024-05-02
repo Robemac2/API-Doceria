@@ -17,10 +17,10 @@ namespace API_Doceria.Controllers
         }
 
         [HttpPost("CadastrarPedidoReceita/{idPedido}/{idReceita}/{pedidoReceitaCadastro}")]
-        public IActionResult CadastrarPedidoReceita(int idPedido, int idReceita, Pedido_Receita pedidoReceitaCadastro)
+        public async Task<IActionResult> CadastrarPedidoReceita(int idPedido, int idReceita, Pedido_Receita pedidoReceitaCadastro)
         {
-            var pedido = _doceriaContext.Pedidos.Find(idPedido);
-            var receita = _doceriaContext.Receitas.Find(idReceita);
+            var pedido = await _doceriaContext.Pedidos.FindAsync(idPedido);
+            var receita = await _doceriaContext.Receitas.FindAsync(idReceita);
 
             if (pedido == null || receita == null)
             {
@@ -34,8 +34,8 @@ namespace API_Doceria.Controllers
             pedidoReceita.Quantidade = pedidoReceitaCadastro.Quantidade;
             pedidoReceita.Total = pedidoReceitaCadastro.Total;
 
-            _doceriaContext.Add(pedidoReceita);
-            _doceriaContext.SaveChanges();
+            await _doceriaContext.AddAsync(pedidoReceita);
+            await _doceriaContext.SaveChangesAsync();
 
             return Ok();
         }
@@ -67,7 +67,7 @@ namespace API_Doceria.Controllers
         }
 
         [HttpDelete("DeletarPedidoReceita/{idPedido}")]
-        public IActionResult DeletarPedidoReceita(int idPedido)
+        public async Task<IActionResult> DeletarPedidoReceita(int idPedido)
         {
             var pedidos = _doceriaContext.Pedido_Receitas.Where(x => x.Pedido.Id == idPedido);
 
@@ -77,7 +77,7 @@ namespace API_Doceria.Controllers
             }
 
             _doceriaContext.Remove(pedidos);
-            _doceriaContext.SaveChanges();
+            await _doceriaContext.SaveChangesAsync();
 
             return Ok();
         }
