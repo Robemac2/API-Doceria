@@ -1,6 +1,7 @@
 ﻿using API_Doceria.Context;
 using API_Doceria.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API_Doceria.Controllers
 {
@@ -16,23 +17,23 @@ namespace API_Doceria.Controllers
         }
 
         [HttpPost("CadastrarUsuario")]
-        public IActionResult CadastrarUsuario(Usuario usuario)
+        public async Task<IActionResult> CadastrarUsuario(Usuario usuario)
         {
             if (usuario == null)
             {
                 return NotFound();
             }
 
-            _doceriaContext.Add(usuario);
-            _doceriaContext.SaveChanges();
+            await _doceriaContext.AddAsync(usuario);
+            await _doceriaContext.SaveChangesAsync();
 
             return Ok();
         }
 
         [HttpGet("ListarUsuarios")]
-        public IActionResult ListarUsuarios()
+        public async Task<IActionResult> ListarUsuarios()
         {
-            var usuarios = _doceriaContext.Usuarios;
+            var usuarios = await _doceriaContext.Usuarios.ToListAsync();
 
             if (usuarios == null)
             {
@@ -61,9 +62,9 @@ namespace API_Doceria.Controllers
         }
 
         [HttpPut("AtualizarUsuario/{id}")]
-        public IActionResult AtualizarUsuario(int id, Usuario usuario)
+        public async Task<IActionResult> AtualizarUsuario(int id, Usuario usuario)
         {
-            var usuarioBanco = _doceriaContext.Usuarios.Find(id);
+            var usuarioBanco = await _doceriaContext.Usuarios.FindAsync(id);
 
             if (usuarioBanco == null)
             {
@@ -74,15 +75,15 @@ namespace API_Doceria.Controllers
             usuarioBanco.TipoUsuario = usuario.TipoUsuario;
 
             _doceriaContext.Update(usuarioBanco);
-            _doceriaContext.SaveChanges();
+            await _doceriaContext.SaveChangesAsync();
 
             return Ok();
         }
 
         [HttpDelete("Deletar/{id}")]
-        public IActionResult ExcluirUsuario(int id)
+        public async Task<IActionResult> ExcluirUsuario(int id)
         {
-            var usuarioBanco = _doceriaContext.Usuarios.Find(id);
+            var usuarioBanco = await _doceriaContext.Usuarios.FindAsync(id);
 
             if (usuarioBanco == null)
             {
@@ -90,7 +91,7 @@ namespace API_Doceria.Controllers
             }
 
             _doceriaContext.Usuarios.Remove(usuarioBanco);
-            _doceriaContext.SaveChanges();
+            await _doceriaContext.SaveChangesAsync();
 
             return Ok();
         }
