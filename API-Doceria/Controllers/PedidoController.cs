@@ -1,6 +1,7 @@
 ﻿using API_Doceria.Context;
 using API_Doceria.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API_Doceria.Controllers
 {
@@ -16,23 +17,23 @@ namespace API_Doceria.Controllers
         }
 
         [HttpPost("CadastrarPedido")]
-        public IActionResult CadastrarPedido(Pedido pedido)
+        public async Task<IActionResult> CadastrarPedido(Pedido pedido)
         {
             if (pedido == null)
             {
                 return NotFound();
             }
 
-            _doceriaContext.Add(pedido);
-            _doceriaContext.SaveChanges();
+            await _doceriaContext.AddAsync(pedido);
+            await _doceriaContext.SaveChangesAsync();
 
             return Ok();
         }
 
         [HttpGet("ListarPedidos")]
-        public IActionResult ListarPedidos()
+        public async Task<IActionResult> ListarPedidos()
         {
-            var pedidos = _doceriaContext.Pedidos;
+            var pedidos = await _doceriaContext.Pedidos.ToListAsync();
 
             if (pedidos == null)
             {
@@ -43,9 +44,9 @@ namespace API_Doceria.Controllers
         }
 
         [HttpGet("BuscarPedido/{id}")]
-        public IActionResult BuscarPedidoPorId(int id)
+        public async Task<IActionResult> BuscarPedidoPorId(int id)
         {
-            var pedido = _doceriaContext.Pedidos.Find(id);
+            var pedido = await _doceriaContext.Pedidos.FindAsync(id);
 
             if (pedido == null)
             {
@@ -56,9 +57,9 @@ namespace API_Doceria.Controllers
         }
 
         [HttpPut("AtualizarPedido/{id}")]
-        public IActionResult AtualizarPedido(int id, Pedido pedido)
+        public async Task<IActionResult> AtualizarPedido(int id, Pedido pedido)
         {
-            var pedidoBanco = _doceriaContext.Pedidos.Find(id);
+            var pedidoBanco = await _doceriaContext.Pedidos.FindAsync(id);
 
             if (pedido == null)
             {
@@ -69,15 +70,15 @@ namespace API_Doceria.Controllers
             pedidoBanco.Status = pedido.Status;
 
             _doceriaContext.Update(pedido);
-            _doceriaContext.SaveChanges();
+            await _doceriaContext.SaveChangesAsync();
 
             return Ok();
         }
 
         [HttpDelete("Deletar/{id}")]
-        public IActionResult ExcluirPedido(int id)
+        public async Task<IActionResult> ExcluirPedido(int id)
         {
-            var pedidoBanco = _doceriaContext.Pedidos.Find(id);
+            var pedidoBanco = await _doceriaContext.Pedidos.FindAsync(id);
 
             if (pedidoBanco == null)
             {
@@ -85,7 +86,7 @@ namespace API_Doceria.Controllers
             }
 
             _doceriaContext.Pedidos.Remove(pedidoBanco);
-            _doceriaContext.SaveChanges();
+            await _doceriaContext.SaveChangesAsync();
 
             return Ok();
         }
