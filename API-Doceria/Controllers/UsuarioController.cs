@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace API_Doceria.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/v1/usuario/")]
     public class UsuarioController : ControllerBase
     {
         private readonly DoceriaContext _doceriaContext;
@@ -16,7 +16,7 @@ namespace API_Doceria.Controllers
             _doceriaContext = doceriaContext;
         }
 
-        [HttpPost("CadastrarUsuario")]
+        [HttpPost("")]
         public async Task<IActionResult> CadastrarUsuario(Usuario usuario)
         {
             if (usuario == null)
@@ -30,7 +30,7 @@ namespace API_Doceria.Controllers
             return Ok();
         }
 
-        [HttpGet("ListarUsuarios")]
+        [HttpGet("listar")]
         public async Task<IActionResult> ListarUsuarios()
         {
             var usuarios = await _doceriaContext.Usuarios.ToListAsync();
@@ -43,7 +43,7 @@ namespace API_Doceria.Controllers
             return Ok(usuarios);
         }
 
-        [HttpGet("ValidarUsuario/{nome}/{senha}")]
+        [HttpGet("validar")]
         public IActionResult ValidarUsuario(string nome, string senha)
         {
             if (nome == null || senha == null)
@@ -61,10 +61,10 @@ namespace API_Doceria.Controllers
             return Ok(usuarioBanco);
         }
 
-        [HttpPut("AtualizarUsuario/{id}")]
-        public async Task<IActionResult> AtualizarUsuario(int id, Usuario usuario)
+        [HttpPut("")]
+        public async Task<IActionResult> AtualizarUsuario(Usuario usuario)
         {
-            var usuarioBanco = await _doceriaContext.Usuarios.FindAsync(id);
+            var usuarioBanco = await _doceriaContext.Usuarios.FindAsync(usuario.Id);
 
             if (usuarioBanco == null)
             {
@@ -80,7 +80,7 @@ namespace API_Doceria.Controllers
             return Ok();
         }
 
-        [HttpDelete("Deletar/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> ExcluirUsuario(int id)
         {
             var usuarioBanco = await _doceriaContext.Usuarios.FindAsync(id);
