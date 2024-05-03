@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace API_Doceria.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/v1/ingrediente/")]
     public class IngredienteController : ControllerBase
     {
         private readonly DoceriaContext _doceriaContext;
@@ -16,12 +16,12 @@ namespace API_Doceria.Controllers
             _doceriaContext = doceriaContext;
         }
 
-        [HttpPost("CadastrarIngrediente")]
+        [HttpPost("")]
         public async Task<IActionResult> CadastrarIngrediente(Ingrediente ingrediente)
         {
             if (ingrediente == null)
             {
-                return NotFound();
+                return BadRequest();
             }
 
             await _doceriaContext.AddAsync(ingrediente);
@@ -30,28 +30,25 @@ namespace API_Doceria.Controllers
             return Ok();
         }
 
-        [HttpGet("ListarIngredientes")]
+        [HttpGet("")]
         public async Task<IActionResult> ListarIngredientes()
         {
             var ingredientes = await _doceriaContext.Ingredientes.ToListAsync();
 
-            if (ingredientes == null)
-            {
-                return NotFound();
-            }
-
             return Ok(ingredientes);
         }
 
-        [HttpPut("AtualizarIngrediente/{id}")]
-        public async Task<IActionResult> AtualizarIngrediente(int id, Ingrediente ingrediente)
+        [HttpPut("")]
+        public async Task<IActionResult> AtualizarIngrediente(Ingrediente ingrediente)
         {
-            var ingredienteBanco = await _doceriaContext.Ingredientes.FindAsync(id);
+            var ingredienteBanco = await _doceriaContext.Ingredientes.FindAsync(ingrediente.Id);
 
             if (ingredienteBanco == null)
             {
                 return NotFound();
             }
+
+            await CadastrarHistorico(ingrediente);
 
             ingredienteBanco.Quantidade = ingrediente.Quantidade;
             ingredienteBanco.Preco = ingrediente.Preco;
@@ -64,7 +61,7 @@ namespace API_Doceria.Controllers
             return Ok();
         }
 
-        [HttpDelete("Deletar/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> ExcluirIngrediente(int id)
         {
             var ingredienteBanco = await _doceriaContext.Ingredientes.FindAsync(id);
@@ -75,6 +72,22 @@ namespace API_Doceria.Controllers
             }
 
             _doceriaContext.Ingredientes.Remove(ingredienteBanco);
+            await _doceriaContext.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        private async Task<IActionResult> CadastrarHistorico(Ingrediente ingrediente)
+        {
+            var historico = new Historico_Ingrediente();
+
+            historico.Ingrediente = ingrediente;
+            historico.Preco = ingrediente.Preco;
+            historico.Quantidade = ingrediente.Quantidade;
+            historico.Unidade = ingrediente.Unidade;
+            historico.Data = ingrediente.Data;
+
+            await _doceriaContext.Historico_Ingredientes.AddAsync(historico);
             await _doceriaContext.SaveChangesAsync();
 
             return Ok();
