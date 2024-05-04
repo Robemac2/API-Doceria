@@ -365,3 +365,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/API-Doceria/Migrations/20240501003925_CriacaoBancoComTabelas.cs
+/API-Doceria/Migrations/DoceriaContextModelSnapshot.cs
