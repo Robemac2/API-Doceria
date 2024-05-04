@@ -19,15 +19,15 @@ namespace API_Doceria.Controllers
         [HttpPost("")]
         public async Task<IActionResult> CadastrarUsuario(Usuario usuario)
         {
-            if (usuario == null)
+            if (usuario.Nome == string.Empty || usuario.Senha == string.Empty)
             {
-                return NotFound();
+                return BadRequest();
             }
 
             await _doceriaContext.AddAsync(usuario);
             await _doceriaContext.SaveChangesAsync();
 
-            return Ok();
+            return Created();
         }
 
         [HttpGet("listar")]
@@ -35,20 +35,15 @@ namespace API_Doceria.Controllers
         {
             var usuarios = await _doceriaContext.Usuarios.ToListAsync();
 
-            if (usuarios == null)
-            {
-                return NotFound();
-            }
-
             return Ok(usuarios);
         }
 
         [HttpGet("validar")]
         public IActionResult ValidarUsuario(string nome, string senha)
         {
-            if (nome == null || senha == null)
+            if (nome == string.Empty || senha == string.Empty)
             {
-                return NotFound();
+                return BadRequest();
             }
 
             var usuarioBanco = _doceriaContext.Usuarios.Where(x => x.Nome == nome && x.Senha == senha);
