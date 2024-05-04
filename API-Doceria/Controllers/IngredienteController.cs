@@ -27,7 +27,7 @@ namespace API_Doceria.Controllers
             await _doceriaContext.AddAsync(ingrediente);
             await _doceriaContext.SaveChangesAsync();
 
-            return Ok();
+            return Created();
         }
 
         [HttpGet("")]
@@ -48,7 +48,7 @@ namespace API_Doceria.Controllers
                 return NotFound();
             }
 
-            await CadastrarHistorico(ingrediente);
+            await CadastrarHistorico(ingredienteBanco);
 
             ingredienteBanco.Quantidade = ingrediente.Quantidade;
             ingredienteBanco.Preco = ingrediente.Preco;
