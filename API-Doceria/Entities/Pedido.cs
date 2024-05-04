@@ -11,6 +11,9 @@ namespace API_Doceria.Entities
         [Column("id")]
         public int Id { get; set; }
 
+        [Column("lista-receitas")]
+        public List<Pedido_Receita> Receitas { get; set; }
+
         [Column("totalPedido", TypeName = "money")]
         public decimal TotalPedido { get; set; }
 
