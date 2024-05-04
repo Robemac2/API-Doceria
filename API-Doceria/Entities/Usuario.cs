@@ -10,12 +10,15 @@ namespace API_Doceria.Entities
         [Key]
         [Column("id")]
         public int Id { get; set; }
+
         [Column("nome")]
         [MaxLength(50)]
         public string Nome { get; set; }
+
         [Column("senha")]
         [MaxLength(50)]
         public string Senha { get; set; }
+
         [Column("tipoUsuario", TypeName = "varchar(24)")]
         public TipoUsuario TipoUsuario { get; set; }
     }

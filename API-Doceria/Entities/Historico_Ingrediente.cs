@@ -10,14 +10,19 @@ namespace API_Doceria.Entities
         [Key]
         [Column("id")]
         public int Id { get; set; }
+
         [ForeignKey("ingredienteId")]
         public virtual Ingrediente Ingrediente { get; set; }
+
         [Column("preco", TypeName = "money")]
         public decimal Preco { get; set; }
+
         [Column("quantidade")]
         public int Quantidade { get; set; }
+
         [Column("unidade", TypeName = "varchar(24)")]
         public Unidade Unidade { get; set; }
+
         [Column("data")]
         public DateOnly Data { get; set; }
     }

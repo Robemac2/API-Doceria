@@ -9,15 +9,20 @@ namespace API_Doceria.Entities
         [Key]
         [Column("id")]
         public int Id { get; set; }
+
         [Column("nome")]
         [MaxLength(50)]
         public string Nome { get; set; }
+
         [Column("tempoDePreparo")]
         public TimeOnly TempoDePreparo { get; set; }
+
         [Column("preco", TypeName = "money")]
         public decimal Preco { get; set; }
+
         [Column("rendimento")]
         public int Rendimento { get; set; }
+
         [Column("precoUnitario", TypeName = "money")]
         public decimal PrecoUnitario { get; set; }
     }
