@@ -11,11 +11,11 @@ namespace API_Doceria.Entities
         [Column("id")]
         public int Id { get; set; }
 
-        [ForeignKey("receitaId")]
-        public virtual Receita Receita { get; set; }
+        [Column("receitaId")]
+        public int ReceitaId { get; set; }
 
-        [ForeignKey("ingredienteId")]
-        public virtual Ingrediente Ingrediente { get; set; }
+        [Column("ingredienteId")]
+        public int IngredienteId { get; set; }
 
         [Column("quantidade")]
         public int Quantidade { get; set; }

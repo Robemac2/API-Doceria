@@ -10,11 +10,11 @@ namespace API_Doceria.Entities
         [Column("id")]
         public int Id { get; set; }
 
-        [ForeignKey("pedidoId")]
-        public virtual Pedido Pedido { get; set; }
+        [Column("pedidoId")]
+        public int PedidoId { get; set; }
 
-        [ForeignKey("receitaId")]
-        public virtual Receita Receita { get; set; }
+        [Column("receitaId")]
+        public int ReceitaId { get; set; }
 
         [Column("quantidade")]
         public int Quantidade { get; set; }

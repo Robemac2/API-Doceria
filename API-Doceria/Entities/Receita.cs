@@ -14,9 +14,6 @@ namespace API_Doceria.Entities
         [MaxLength(50)]
         public string Nome { get; set; }
 
-        [Column("lista-ingredientes")]
-        public List<IngredientesParaReceita> Ingredientes { get; set; }
-
         [Column("tempoDePreparo")]
         public TimeOnly TempoDePreparo { get; set; }
 
