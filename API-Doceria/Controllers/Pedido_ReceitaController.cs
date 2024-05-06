@@ -1,12 +1,11 @@
 ﻿using API_Doceria.Context;
 using API_Doceria.Entities;
-using API_Doceria.Enum;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API_Doceria.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/v1/pedido-receita/")]
     public class Pedido_ReceitaController : ControllerBase
     {
         private readonly DoceriaContext _doceriaContext;
@@ -16,36 +15,26 @@ namespace API_Doceria.Controllers
             _doceriaContext = doceriaContext;
         }
 
-        [HttpPost("CadastrarPedidoReceita/{idPedido}/{idReceita}/{pedidoReceitaCadastro}")]
-        public async Task<IActionResult> CadastrarPedidoReceita(int idPedido, int idReceita, Pedido_Receita pedidoReceitaCadastro)
+        [HttpPost("")]
+        public async Task<IActionResult> CadastrarPedidoReceita(List<Pedido_Receita> receitas)
         {
-            var pedido = await _doceriaContext.Pedidos.FindAsync(idPedido);
-            var receita = await _doceriaContext.Receitas.FindAsync(idReceita);
-
-            if (pedido == null || receita == null)
+            if (receitas.Count == 0)
             {
-                return NotFound();
+                return BadRequest();
             }
 
-            var pedidoReceita = new Pedido_Receita();
-
-            pedidoReceita.Pedido = pedido;
-            pedidoReceita.Receita = receita;
-            pedidoReceita.Quantidade = pedidoReceitaCadastro.Quantidade;
-            pedidoReceita.Total = pedidoReceitaCadastro.Total;
-
-            await _doceriaContext.AddAsync(pedidoReceita);
+            await _doceriaContext.AddRangeAsync(receitas);
             await _doceriaContext.SaveChangesAsync();
 
-            return Ok();
+            return Created();
         }
 
-        [HttpGet("ListarPedidoReceita/{idPedido}")]
-        public IActionResult ListarPedidoReceita(int idPedido)
+        [HttpGet("")]
+        public IActionResult ListarPedidoReceita(Pedido pedido)
         {
-            var pedidoReceitas = _doceriaContext.Pedido_Receitas.Where(x => x.Pedido.Id == idPedido);
+            var pedidoReceitas = _doceriaContext.Pedido_Receitas.Where(x => x.PedidoId == pedido.Id);
 
-            if (pedidoReceitas == null)
+            if (pedidoReceitas.Count() == 0)
             {
                 return NotFound();
             }
@@ -53,30 +42,17 @@ namespace API_Doceria.Controllers
             return Ok(pedidoReceitas);
         }
 
-        [HttpGet("ListarPedidos/{status}")]
-        public IActionResult ListarPedidoPorStatus(StatusPedido status)
-        {
-            var pedidos = _doceriaContext.Pedido_Receitas.Where(x => x.Pedido.Status == status);
-
-            if (pedidos == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(pedidos);
-        }
-
-        [HttpDelete("DeletarPedidoReceita/{idPedido}")]
+        [HttpDelete("{idPedido}")]
         public async Task<IActionResult> DeletarPedidoReceita(int idPedido)
         {
-            var pedidos = _doceriaContext.Pedido_Receitas.Where(x => x.Pedido.Id == idPedido);
+            var pedidos = _doceriaContext.Pedido_Receitas.Where(x => x.PedidoId == idPedido);
 
-            if (pedidos == null)
+            if (pedidos.Count() == 0)
             {
-                return NotFound();
+                return BadRequest();
             }
 
-            _doceriaContext.Remove(pedidos);
+            _doceriaContext.Pedido_Receitas.RemoveRange(pedidos);
             await _doceriaContext.SaveChangesAsync();
 
             return Ok();

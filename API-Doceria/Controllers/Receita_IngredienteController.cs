@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace API_Doceria.Controllers
 {
     [ApiController]
-    [Route("api/va/receita-ingrediente/")]
+    [Route("api/v1/receita-ingrediente/")]
     public class Receita_IngredienteController : ControllerBase
     {
         private readonly DoceriaContext _doceriaContext;
@@ -15,17 +15,50 @@ namespace API_Doceria.Controllers
             _doceriaContext = doceriaContext;
         }
 
+        [HttpPost("")]
+        public async Task<IActionResult> CadastrarIngredientesReceita(List<Receita_Ingrediente> ingredientes)
+        {
+            if (ingredientes.Count == 0)
+            {
+                return BadRequest();
+            }
+
+            foreach (Receita_Ingrediente ingrediente in ingredientes)
+            {
+                await _doceriaContext.AddAsync(ingrediente);
+                await _doceriaContext.SaveChangesAsync();
+            }
+
+            return Created();
+        }
+
         [HttpGet("")]
         public IActionResult ListarReceitaIngrediente(Receita receita)
         {
-            var receitaIngredientes = _doceriaContext.Receita_Ingrediente.Where(x => x.Receita.Id == receita.Id);
+            var receitaIngredientes = _doceriaContext.Receita_Ingrediente.Where(x => x.ReceitaId == receita.Id);
 
-            if (receitaIngredientes == null)
+            if (receitaIngredientes.Count() == 0)
             {
                 return NotFound();
             }
 
             return Ok(receitaIngredientes);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> ExcluirIngredientesReceita(int id)
+        {
+            var ingredientes = _doceriaContext.Receita_Ingrediente.Where(x => x.ReceitaId == id);
+
+            if (ingredientes.Count() == 0)
+            {
+                return BadRequest();
+            }
+
+            _doceriaContext.RemoveRange(ingredientes);
+            await _doceriaContext.SaveChangesAsync();
+
+            return Ok();
         }
     }
 }

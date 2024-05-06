@@ -48,7 +48,7 @@ namespace API_Doceria.Controllers
 
             var usuarioBanco = _doceriaContext.Usuarios.Where(x => x.Nome == nome && x.Senha == senha);
 
-            if (usuarioBanco == null)
+            if (usuarioBanco.Count() == 0)
             {
                 return NotFound();
             }
@@ -61,7 +61,7 @@ namespace API_Doceria.Controllers
         {
             var usuarioBanco = await _doceriaContext.Usuarios.FindAsync(usuario.Id);
 
-            if (usuarioBanco == null)
+            if (usuarioBanco.Nome == string.Empty)
             {
                 return NotFound();
             }

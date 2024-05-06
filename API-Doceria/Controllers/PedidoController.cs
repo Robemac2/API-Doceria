@@ -1,12 +1,13 @@
 ﻿using API_Doceria.Context;
 using API_Doceria.Entities;
+using API_Doceria.Enum;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API_Doceria.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/v1/pedido/")]
     public class PedidoController : ControllerBase
     {
         private readonly DoceriaContext _doceriaContext;
@@ -16,12 +17,12 @@ namespace API_Doceria.Controllers
             _doceriaContext = doceriaContext;
         }
 
-        [HttpPost("CadastrarPedido")]
+        [HttpPost("")]
         public async Task<IActionResult> CadastrarPedido(Pedido pedido)
         {
-            if (pedido == null)
+            if (pedido.Cliente == string.Empty)
             {
-                return NotFound();
+                return BadRequest();
             }
 
             await _doceriaContext.AddAsync(pedido);
@@ -30,12 +31,12 @@ namespace API_Doceria.Controllers
             return Ok();
         }
 
-        [HttpGet("ListarPedidos")]
+        [HttpGet("")]
         public async Task<IActionResult> ListarPedidos()
         {
             var pedidos = await _doceriaContext.Pedidos.ToListAsync();
 
-            if (pedidos == null)
+            if (pedidos.Count() == 0)
             {
                 return NotFound();
             }
@@ -43,25 +44,38 @@ namespace API_Doceria.Controllers
             return Ok(pedidos);
         }
 
-        [HttpGet("BuscarPedido/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> BuscarPedidoPorId(int id)
         {
             var pedido = await _doceriaContext.Pedidos.FindAsync(id);
 
             if (pedido == null)
             {
-                return NotFound();
+                return BadRequest();
             }
 
             return Ok(pedido);
         }
 
-        [HttpPut("AtualizarPedido/{id}")]
-        public async Task<IActionResult> AtualizarPedido(int id, Pedido pedido)
+        [HttpGet("buscar/{status}")]
+        public IActionResult ListarPedidoPorStatus(StatusPedido status)
         {
-            var pedidoBanco = await _doceriaContext.Pedidos.FindAsync(id);
+            var pedidos = _doceriaContext.Pedidos.Where(x => x.Status == status);
 
-            if (pedido == null)
+            if (pedidos.Count() == 0)
+            {
+                return BadRequest();
+            }
+
+            return Ok(pedidos);
+        }
+
+        [HttpPut("")]
+        public async Task<IActionResult> AtualizarPedido(Pedido pedido)
+        {
+            var pedidoBanco = await _doceriaContext.Pedidos.FindAsync(pedido.Id);
+
+            if (pedidoBanco == null)
             {
                 return NotFound();
             }
@@ -69,20 +83,20 @@ namespace API_Doceria.Controllers
             pedidoBanco.TotalPedido = pedido.TotalPedido;
             pedidoBanco.Status = pedido.Status;
 
-            _doceriaContext.Update(pedido);
+            _doceriaContext.Update(pedidoBanco);
             await _doceriaContext.SaveChangesAsync();
 
             return Ok();
         }
 
-        [HttpDelete("Deletar/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> ExcluirPedido(int id)
         {
             var pedidoBanco = await _doceriaContext.Pedidos.FindAsync(id);
 
             if (pedidoBanco == null)
             {
-                return NotFound();
+                return BadRequest();
             }
 
             _doceriaContext.Pedidos.Remove(pedidoBanco);

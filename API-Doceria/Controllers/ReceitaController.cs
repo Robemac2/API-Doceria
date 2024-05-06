@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace API_Doceria.Controllers
 {
     [ApiController]
-    [Route("api/v1/receitas/")]
+    [Route("api/v1/receita/")]
     public class ReceitaController : ControllerBase
     {
         private readonly DoceriaContext _doceriaContext;
@@ -19,17 +19,13 @@ namespace API_Doceria.Controllers
         [HttpPost("")]
         public async Task<IActionResult> CadastrarReceita(Receita receita)
         {
-            if (receita.Nome == string.Empty || receita.Ingredientes.Count() == 0)
+            if (receita.Nome == string.Empty)
             {
                 return BadRequest();
             }
 
             await _doceriaContext.AddAsync(receita);
             await _doceriaContext.SaveChangesAsync();
-
-            var receitaSalva = await _doceriaContext.Receitas.Where(x => x.Nome == receita.Nome).FirstAsync();
-
-            await CadastrarIngredientesReceita(receitaSalva);
 
             return Created();
         }
@@ -52,7 +48,6 @@ namespace API_Doceria.Controllers
                 return NotFound();
             }
 
-            receitaBanco.Ingredientes = receita.Ingredientes;
             receitaBanco.TempoDePreparo = receita.TempoDePreparo;
             receitaBanco.Preco = receita.Preco;
             receitaBanco.Rendimento = receita.Rendimento;
@@ -60,9 +55,6 @@ namespace API_Doceria.Controllers
 
             _doceriaContext.Update(receitaBanco);
             await _doceriaContext.SaveChangesAsync();
-
-            await ExcluirIngredientesReceita(receita);
-            await CadastrarIngredientesReceita(receitaBanco);
 
             return Ok();
         }
@@ -72,43 +64,12 @@ namespace API_Doceria.Controllers
         {
             var receitaBanco = await _doceriaContext.Receitas.FindAsync(id);
 
-            if (receitaBanco == null)
+            if (receitaBanco.Nome == string.Empty)
             {
                 return NotFound();
             }
 
             _doceriaContext.Receitas.Remove(receitaBanco);
-            await _doceriaContext.SaveChangesAsync();
-
-            await ExcluirIngredientesReceita(receitaBanco);
-
-            return Ok();
-        }
-
-        private async Task<IActionResult> CadastrarIngredientesReceita(Receita receita)
-        {
-            foreach (var ingrediente in receita.Ingredientes)
-            {
-                var ingredienteBanco = new Receita_Ingrediente();
-
-                ingredienteBanco.Receita = receita;
-                ingredienteBanco.Ingrediente = ingrediente.Ingrediente;
-                ingredienteBanco.Quantidade = ingrediente.Quantidade;
-                ingredienteBanco.Unidade = ingrediente.Unidade;
-                ingredienteBanco.Preco = ingrediente.Preco;
-
-                await _doceriaContext.AddAsync(ingredienteBanco);
-                await _doceriaContext.SaveChangesAsync();
-            }
-
-            return Created();
-        }
-
-        private async Task<IActionResult> ExcluirIngredientesReceita(Receita receita)
-        {
-            var ingredientes = _doceriaContext.Receita_Ingrediente.Where(x => x.Receita.Id == receita.Id);
-
-            _doceriaContext.Receita_Ingrediente.RemoveRange(ingredientes);
             await _doceriaContext.SaveChangesAsync();
 
             return Ok();

@@ -19,7 +19,7 @@ namespace API_Doceria.Controllers
         [HttpPost("")]
         public async Task<IActionResult> CadastrarIngrediente(Ingrediente ingrediente)
         {
-            if (ingrediente == null)
+            if (ingrediente.Nome == string.Empty || ingrediente.Preco == 0)
             {
                 return BadRequest();
             }
@@ -66,7 +66,7 @@ namespace API_Doceria.Controllers
         {
             var ingredienteBanco = await _doceriaContext.Ingredientes.FindAsync(id);
 
-            if (ingredienteBanco == null)
+            if (ingredienteBanco.Nome == string.Empty)
             {
                 return NotFound();
             }
