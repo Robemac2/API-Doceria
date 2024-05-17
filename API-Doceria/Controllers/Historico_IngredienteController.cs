@@ -1,5 +1,4 @@
 ﻿using API_Doceria.Context;
-using API_Doceria.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API_Doceria.Controllers
@@ -10,15 +9,15 @@ namespace API_Doceria.Controllers
     {
         public readonly DoceriaContext _doceriaContext;
 
-        public Historico_IngredienteController(DoceriaContext doceriaContext)
+        public Historico_IngredienteController( DoceriaContext doceriaContext )
         {
             _doceriaContext = doceriaContext;
         }
 
-        [HttpGet("")]
-        public IActionResult ListarHistoricoIngrediente(Ingrediente ingrediente)
+        [HttpGet("{id}")]
+        public IActionResult ListarHistoricoIngrediente( int id )
         {
-            var historico = _doceriaContext.Historico_Ingredientes.Where(x => x.Ingrediente.Id == ingrediente.Id);
+            var historico = _doceriaContext.Historico_Ingredientes.Where(x => x.Ingrediente.Id == id);
 
             return Ok(historico);
         }
