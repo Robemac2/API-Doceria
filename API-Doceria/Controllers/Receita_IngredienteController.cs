@@ -10,20 +10,20 @@ namespace API_Doceria.Controllers
     {
         private readonly DoceriaContext _doceriaContext;
 
-        public Receita_IngredienteController(DoceriaContext doceriaContext)
+        public Receita_IngredienteController( DoceriaContext doceriaContext )
         {
             _doceriaContext = doceriaContext;
         }
 
         [HttpPost("")]
-        public async Task<IActionResult> CadastrarIngredientesReceita(List<Receita_Ingrediente> ingredientes)
+        public async Task<IActionResult> CadastrarIngredientesReceita( List<Receita_Ingrediente> ingredientes )
         {
-            if (ingredientes.Count == 0)
+            if ( ingredientes.Count == 0 )
             {
                 return BadRequest();
             }
 
-            foreach (Receita_Ingrediente ingrediente in ingredientes)
+            foreach ( Receita_Ingrediente ingrediente in ingredientes )
             {
                 await _doceriaContext.AddAsync(ingrediente);
                 await _doceriaContext.SaveChangesAsync();
@@ -32,12 +32,12 @@ namespace API_Doceria.Controllers
             return Created();
         }
 
-        [HttpGet("")]
-        public IActionResult ListarReceitaIngrediente(Receita receita)
+        [HttpGet("{receita}")]
+        public IActionResult ListarReceitaIngrediente( Receita receita )
         {
             var receitaIngredientes = _doceriaContext.Receita_Ingrediente.Where(x => x.ReceitaId == receita.Id);
 
-            if (receitaIngredientes.Count() == 0)
+            if ( receitaIngredientes.Count() == 0 )
             {
                 return NotFound();
             }
@@ -46,11 +46,11 @@ namespace API_Doceria.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> ExcluirIngredientesReceita(int id)
+        public async Task<IActionResult> ExcluirIngredientesReceita( int id )
         {
             var ingredientes = _doceriaContext.Receita_Ingrediente.Where(x => x.ReceitaId == id);
 
-            if (ingredientes.Count() == 0)
+            if ( ingredientes.Count() == 0 )
             {
                 return BadRequest();
             }
