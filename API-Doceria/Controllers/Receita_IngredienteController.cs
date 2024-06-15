@@ -32,10 +32,10 @@ namespace API_Doceria.Controllers
             return Created();
         }
 
-        [HttpGet("{receita}")]
-        public IActionResult ListarReceitaIngrediente( Receita receita )
+        [HttpGet("{id}")]
+        public IActionResult ListarReceitaIngrediente( int id )
         {
-            var receitaIngredientes = _doceriaContext.Receita_Ingrediente.Where(x => x.ReceitaId == receita.Id);
+            var receitaIngredientes = _doceriaContext.Receita_Ingrediente.Where(x => x.ReceitaId == id);
 
             if ( receitaIngredientes.Count() == 0 )
             {
