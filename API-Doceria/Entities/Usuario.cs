@@ -20,6 +20,6 @@ namespace API_Doceria.Entities
         public string Senha { get; set; }
 
         [Column("tipoUsuario", TypeName = "varchar(24)")]
-        public TipoUsuario TipoUsuario { get; set; }
+        public string TipoUsuario { get; set; }
     }
 }
