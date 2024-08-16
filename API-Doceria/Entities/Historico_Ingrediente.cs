@@ -21,7 +21,7 @@ namespace API_Doceria.Entities
         public int Quantidade { get; set; }
 
         [Column("unidade", TypeName = "varchar(24)")]
-        public Unidade Unidade { get; set; }
+        public string Unidade { get; set; }
 
         [Column("data")]
         public DateOnly Data { get; set; }

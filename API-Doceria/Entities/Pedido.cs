@@ -22,6 +22,6 @@ namespace API_Doceria.Entities
         public DateOnly DataPedido { get; set; }
 
         [Column("status", TypeName = "varchar(24)")]
-        public StatusPedido Status { get; set; }
+        public string Status { get; set; }
     }
 }

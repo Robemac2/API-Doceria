@@ -58,7 +58,7 @@ namespace API_Doceria.Controllers
         }
 
         [HttpGet("buscar/{status}")]
-        public IActionResult ListarPedidoPorStatus(StatusPedido status)
+        public IActionResult ListarPedidoPorStatus(string status)
         {
             var pedidos = _doceriaContext.Pedidos.Where(x => x.Status == status);
 
